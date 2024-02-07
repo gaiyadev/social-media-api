@@ -1,4 +1,3 @@
-using BookstoreAPI.CustomResponses.Responses;
 using Microsoft.AspNetCore.Mvc;
 using SocialMediaApp.Utils;
 
@@ -6,13 +5,13 @@ namespace SocialMediaApp.Responses;
 
 public class ErrorResponse
 {
-            public static IActionResult HandleNotFound(string errorMessage)
+        public static IActionResult HandleNotFound(string errorMessage)
         {
             var notFoundApiResponse = new ErrorResponseModel
             {
-                Error = errorMessage,
+                Message = errorMessage,
                 StatusCode = 404,
-                Title =  HttpStatusTitles.NotFound,
+                Error =  HttpStatusTitles.NotFound,
             };
             return new ObjectResult(notFoundApiResponse)
             {
@@ -24,9 +23,9 @@ public class ErrorResponse
         {
             var forbidApiResponse = new ErrorResponseModel
             {
-                Error = errorMessage,
+                Message = errorMessage,
                 StatusCode = 403,
-                Title =  HttpStatusTitles.Forbidden,
+                Error =  HttpStatusTitles.Forbidden,
             };
             return new ObjectResult(forbidApiResponse)
             {
@@ -38,9 +37,9 @@ public class ErrorResponse
         {
             var badRequestApiResponse = new ErrorResponseModel
             {
-                Error = errorMessage,
+                Message = errorMessage,
                 StatusCode = 400,
-                Title = HttpStatusTitles.BadRequest,
+                Error = HttpStatusTitles.BadRequest,
             };
             return new ObjectResult(badRequestApiResponse)
             {
@@ -52,22 +51,23 @@ public class ErrorResponse
         {
             var conflictResponse = new ErrorResponseModel
             {
-                Error = errorMessage,
+                Message = errorMessage,
                 StatusCode = 409,
-                Title =  HttpStatusTitles.Conflict,
+                Error =  HttpStatusTitles.Conflict,
             };
             return new ObjectResult(conflictResponse)
             {
                 StatusCode = 409
             };
         }
+        
         public static IActionResult HandleUnauthorizedException(string errorMessage)
         {
             var unauthorizedResponse = new ErrorResponseModel
             {
-                Error = errorMessage,
+                Message = errorMessage,
                 StatusCode = 401,
-                Title =  HttpStatusTitles.Unauthorized,
+                Error =  HttpStatusTitles.Unauthorized,
             };
             return new ObjectResult(unauthorizedResponse)
             {
@@ -78,9 +78,9 @@ public class ErrorResponse
         {
             var internalServerErrorApiResponse = new ErrorResponseModel
             {
-                Error = errorMessage,
+                Message = errorMessage,
                 StatusCode = 500,
-                Title =  HttpStatusTitles.InternalServerError,
+                Error =  HttpStatusTitles.InternalServerError,
             };
             return new ObjectResult(internalServerErrorApiResponse)
             {

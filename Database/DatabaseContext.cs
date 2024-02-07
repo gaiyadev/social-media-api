@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SocialMediaApp.Entities;
 
 namespace SocialMediaApp.Database;
 
@@ -10,10 +11,17 @@ public class DatabaseContext : DbContext
     {
     }
 
-    // public required DbSet<User> Users { get; set; }
+    public required DbSet<User> Users { get; set; }
    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(_databaseUrl);
+    }
+
+     protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
     }
 }
