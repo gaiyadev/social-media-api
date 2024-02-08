@@ -2,7 +2,7 @@ using System.Text;
 
 namespace SocialMediaApp.Middlewares;
 
-public class RequestLoggingMiddleware
+public sealed class RequestLoggingMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger<RequestLoggingMiddleware> _logger; 

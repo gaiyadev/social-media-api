@@ -1,10 +1,12 @@
 
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using SocialMediaApp.DTOs;
 using SocialMediaApp.Exceptions;
 using SocialMediaApp.Responses;
 using SocialMediaApp.Services;
 using SocialMediaApp.Services.User;
+using SocialMediaApp.Utils;
 
 namespace SocialMediaApp.Controllers;
 
@@ -15,10 +17,16 @@ public class UserController : ControllerBase
     private readonly IUserService _userService;
     private readonly JwtService _jwtService;
 
-    public UserController(IUserService userService, JwtService jwtService)
+    private readonly SuccessResponse _successResponse;
+
+    private readonly ErrorResponse _errorResponse;
+
+    public UserController(IUserService userService, JwtService jwtService, ErrorResponse errorResponse, SuccessResponse successResponse)
     {
         _userService = userService;
         _jwtService = jwtService;
+        _errorResponse = errorResponse;
+        _successResponse = successResponse;
     }
 
     [HttpPost("signup")]
@@ -32,20 +40,19 @@ public class UserController : ControllerBase
             {
                 new { id = user.Id, email = user.Email }
             };
-
-            return SuccessResponse.HandleCreated("Successfully created", response);
+            return _successResponse.HandleSuccess("Successfully created", response, (int)HttpStatusCode.Created, null);
         }
         catch (ConflictException ex)
         {
-            return ErrorResponse.HandleConflictException(ex.Message);
+            return _errorResponse.HandleError(ex.Message, (int)HttpStatusCode.Conflict, HttpStatusTitles.Conflict);
         }
         catch (InternalServerException ex)
         {
-            return ErrorResponse.HandleInternalServerError(ex.Message);
+            return _errorResponse.HandleError(ex.Message, (int)HttpStatusCode.InternalServerError, HttpStatusTitles.InternalServerError);
         }
         catch (Exception ex)
         {
-            return ErrorResponse.HandleInternalServerError(ex.Message);
+            return _errorResponse.HandleError(ex.Message, (int)HttpStatusCode.InternalServerError, HttpStatusTitles.InternalServerError);
         }
 
     }
@@ -56,27 +63,28 @@ public class UserController : ControllerBase
         try
         {
             var user = await _userService.SignIn(signInDto);
-            
+
             var token = _jwtService.CreateToken(user.Email, user.FirstName, user.Id);
-          
+
             var response = new List<object>
             {
                 new { id = user.Id, email = user.Email }
             };
 
-            return SuccessResponse.HandleOk("Successfully login", response, token);
+            return _successResponse.HandleSuccess("Successfully login", response, (int)HttpStatusCode.OK, token);
         }
         catch (ForbiddenException ex)
         {
-            return ErrorResponse.HandleForbidden(ex.Message);
+            return _errorResponse.HandleError(ex.Message, (int)HttpStatusCode.Forbidden, HttpStatusTitles.Forbidden);
+
         }
         catch (NotFoundException ex)
         {
-            return ErrorResponse.HandleNotFound(ex.Message);
+            return _errorResponse.HandleError(ex.Message, (int)HttpStatusCode.NotFound, HttpStatusTitles.NotFound);
         }
         catch (Exception ex)
         {
-            return ErrorResponse.HandleInternalServerError(ex.Message);
+            return _errorResponse.HandleError(ex.Message, (int)HttpStatusCode.InternalServerError, HttpStatusTitles.InternalServerError);
         }
     }
 

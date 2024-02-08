@@ -2,30 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SocialMediaApp.Responses;
 
-public static class SuccessResponse
-{
-    public static IActionResult HandleCreated<T>(string message, T data )
+public sealed class SuccessResponse
+{    
+    public IActionResult HandleSuccess<T>(string message, T data, int StatusCode, string? accessToken)
     {
         var apiResponse = new SuccessResponseModel<T>
         {
             Message = message,
-            StatusCode = 201,
-            Status = "Success",
-            Data = data,
-        };
-
-        return new ObjectResult(apiResponse)
-        {
-            StatusCode = 201
-        };
-    }
-    
-    public static IActionResult HandleOk<T>(string message, T data, string? accessToken)
-    {
-        var apiResponse = new SuccessResponseModel<T>
-        {
-            Message = message,
-            StatusCode = 200,
+            StatusCode = StatusCode,
             Status = "Success",
             Data = data,
             accessToken = accessToken
@@ -33,22 +17,7 @@ public static class SuccessResponse
 
         return new ObjectResult(apiResponse)
         {
-            StatusCode = 200
-        };
-    }
-    public static IActionResult HandleNoContent<T>(string message, T? data)
-    {
-        var apiResponse = new SuccessResponseModel<T?>
-        {
-            Message = message,
-            StatusCode = 204,
-            Status = "Success",
-            Data =  data
-        };
-
-        return new ObjectResult(apiResponse)
-        {
-            StatusCode = 204
+            StatusCode = StatusCode
         };
     }
     

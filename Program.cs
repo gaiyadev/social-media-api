@@ -11,6 +11,7 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using SocialMediaApp.Services.User;
 using SocialMediaApp.Services;
+using SocialMediaApp.Responses;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,9 +59,11 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddScoped<PasswordService>();
-builder.Services.AddScoped<JwtService>();
+builder.Services.AddTransient<PasswordService>();
+builder.Services.AddTransient<JwtService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddTransient<SuccessResponse>();
+builder.Services.AddTransient<ErrorResponse>();
 
 
 builder.Services.AddFluentValidationAutoValidation();
@@ -102,7 +105,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseMiddleware<RequestLoggingMiddleware>();
 
