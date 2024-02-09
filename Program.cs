@@ -12,6 +12,8 @@ using Microsoft.OpenApi.Models;
 using SocialMediaApp.Services.User;
 using SocialMediaApp.Services;
 using SocialMediaApp.Responses;
+using SocialMediaApp.Services.Post;
+using SocialMediaApp.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,10 +62,18 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddTransient<PasswordService>();
+
 builder.Services.AddTransient<JwtService>();
+
 builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IPostService, PostService>();
+
 builder.Services.AddTransient<SuccessResponse>();
+
 builder.Services.AddTransient<ErrorResponse>();
+
+builder.Services.AddTransient<AuthUserService>();
 
 
 builder.Services.AddFluentValidationAutoValidation();
@@ -73,6 +83,8 @@ builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<SignUpDtoValidator>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<SignInDtoValidator>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreatePostDto>();
 
 builder.Services.AddAuthentication(options =>
 {

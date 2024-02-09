@@ -33,12 +33,7 @@ public class User : BaseEntity
     public bool IsActive { get; set; }
 
     
-    // [JsonIgnore]
-    // public ICollection<Product> Products { get; set; }
+    [JsonIgnore]
+    public ICollection<Post> Posts { get; set; } = new List<Post>();
     
-    // [JsonIgnore]
-    // public ICollection<CartItem> CartItems { get; set; }
-    
-    // [JsonIgnore]
-    // public ICollection<Order> Orders { get; set; }
 }
